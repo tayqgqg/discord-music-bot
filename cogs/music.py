@@ -40,6 +40,8 @@ class Music(commands.Cog):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:
                 info = ydl.extract_info(query, download=False)
+                if 'url' not in info:
+                    raise ValueError("Tidak ada URL yang ditemukan")
                 url = info['url']
                 title = info.get('title', '🎶 Lagu')
             except Exception as e:
