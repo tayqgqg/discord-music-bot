@@ -1,4 +1,3 @@
-
 import os
 import discord
 from discord.ext import commands
@@ -11,16 +10,16 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.voice_states = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        await self.load_extension("cogs.general")
+        await self.load_extension("cogs.music")
+        await self.tree.sync()  # untuk slash command
+
+bot = MyBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"Bot aktif sebagai {bot.user}")
-    await bot.tree.sync()
+    print(f"✅ Bot aktif sebagai {bot.user}")
 
-async def load_cogs():
-    await bot.load_extension("cogs.general")
-    await bot.load_extension("cogs.music")
-
-bot.loop.create_task(load_cogs())
 bot.run(TOKEN)
