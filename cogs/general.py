@@ -1,4 +1,3 @@
-
 from discord.ext import commands
 import discord
 
@@ -10,8 +9,8 @@ class General(commands.Cog):
     async def hello(self, ctx):
         await ctx.send("👋 Halo! Aku adalah bot serba bisa!")
 
-    @commands.hybrid_command(name="help", with_app_command=True, description="📚 Tampilkan semua perintah")
-    async def help_command(self, ctx):
+    @commands.hybrid_command(name="helpme", with_app_command=True, description="📚 Tampilkan semua perintah")
+    async def helpme(self, ctx):
         embed = discord.Embed(title="📚 Daftar Perintah", color=discord.Color.blurple())
         embed.add_field(name="👋 !hello", value="Menyapa bot", inline=False)
         embed.add_field(name="🎲 !roll", value="Roll angka acak", inline=False)
