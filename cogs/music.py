@@ -1,4 +1,3 @@
-
 from discord.ext import commands
 import discord
 import asyncio
@@ -33,10 +32,18 @@ class Music(commands.Cog):
             await vc.connect()
 
         ydl_opts = {'format': 'bestaudio', 'noplaylist': 'True'}
+        
+        # Memastikan query diawali dengan ytsearch: jika bukan URL
+        if not query.startswith('http'):
+            query = f"ytsearch:{query}"
+
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(query, download=False)
-            url = info['url']
-            title = info.get('title', '🎶 Lagu')
+            try:
+                info = ydl.extract_info(query, download=False)
+                url = info['url']
+                title = info.get('title', '🎶 Lagu')
+            except Exception as e:
+                return await ctx.send(f"❌ Terjadi kesalahan saat mencari lagu: {e}")
 
         await get_queue(ctx.guild.id).put((url, title))
         await ctx.send(f"🎧 Ditambahkan ke antrean: **{title}**")
@@ -87,8 +94,8 @@ class Music(commands.Cog):
         if q.empty():
             await ctx.send("📭 Antrean kosong.")
         else:
-            msg = "\n".join([f"{i+1}. {item[1]}" for i, item in enumerate(list(q._queue))])
-            await ctx.send(f"📜 Antrean lagu:\n{msg}")
+            msg = "\\n".join([f"{i+1}. {item[1]}" for i, item in enumerate(list(q._queue))])
+            await ctx.send(f"📜 Antrean lagu:\\n{msg}")
 
     @commands.hybrid_command(name="loop", description="🔁 Aktifkan/Nonaktifkan loop")
     async def loop(self, ctx):
